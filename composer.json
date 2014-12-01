@@ -1,0 +1,16 @@
+{
+	"name": "frankmullenger/gpg-mailer",
+	"description": "GPG Mailer",
+	"require": {
+		"silverstripe/cms": "~3.1",
+		"silverstripe/framework": "~3.1",
+		"pear/crypt_gpg": "dev-master"
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/pear/Crypt_GPG.git"
+		}
+	],
+	"minimum-stability": "dev"
+}
