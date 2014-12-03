@@ -1,6 +1,7 @@
 {
 	"name": "frankmullenger/gpg-mailer",
 	"description": "GPG Mailer",
+	"type": "silverstripe-module",
 	"require": {
 		"silverstripe/cms": "~3.1",
 		"silverstripe/framework": "~3.1",
