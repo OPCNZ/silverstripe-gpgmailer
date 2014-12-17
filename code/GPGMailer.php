@@ -7,6 +7,9 @@ require_once 'Crypt/GPG.php';
  * a very simple HTML template that can be encrypted and re-wrapped in body tags.
  *
  * Necessary to provide keyring files via Crypt_GPG options in YAML.
+ *
+ * @todo  HTML encryption if possible, look into PGP/MIME
+ * @todo  Ability tro add additional encryption and signing keys
  */
 class GPGMailer extends Mailer {
 
@@ -33,6 +36,7 @@ class GPGMailer extends Mailer {
 		// Add encryption key
 		$this->gpg->addEncryptKey($encryptKey);	
 
+		// Add signing key
 		if ($signKey) {
 			$this->gpg->addSignKey($signKey, $signKeyPassPhrase);
 			$this->sign = true;
@@ -187,9 +191,6 @@ class GPGMailer extends Mailer {
 	 * @todo  test with $destFilename
 	 * @todo  test with disposition set to inline
 	 * @todo  test with contentLocation param, see Mailer::encodeFileForEmail()
-	 * @todo  test with different types of files which use different MIME types
-	 * @todo  test with large files
-	 * @todo  test with script timeout
 	 * 
 	 * @param  Mixed   $file         Array of file data including content or just string indicating filename
 	 * @param  String  $destFileName Destination filename
