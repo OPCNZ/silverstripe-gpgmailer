@@ -10,6 +10,15 @@ require_once 'Crypt/GPG.php';
  *
  * @todo  HTML encryption if possible, look into PGP/MIME
  * @todo  Ability tro add additional encryption and signing keys
+ * @todo  correct headers for Content-Transfer-Encoding, should be base64 for ASCII armor? Only accepts binary|8bit|7bit not quoted-printable|base64
+ *        http://en.wikipedia.org/wiki/MIME#Content-Transfer-Encoding
+ *        http://www.techopedia.com/definition/23150/ascii-armor
+ *        https://tools.ietf.org/html/rfc3156
+ *        http://docs.roguewave.com/sourcepro/11.1/html/protocolsug/10-1.html
+ *        https://www.gnupg.org/documentation/manuals/gnupg/Input-and-Output.html
+ *        "Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation."
+ * @todo  Content-Type header to include protocol="application/pgp-encrypted" https://tools.ietf.org/html/rfc3156
+ * 
  */
 class GPGMailer extends Mailer {
 
@@ -93,6 +102,7 @@ class GPGMailer extends Mailer {
 		$headers["Content-Type"] = "text/plain; charset=utf-8";
 		$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
+		// Is this step necessary if we get ASCII armor output?
 		$plainContent = ($plainEncoding == "base64") 
 			? chunk_split(base64_encode($plainContent), 60)
 			: $this->QuotedPrintable_encode($plainContent);
@@ -226,7 +236,11 @@ class GPGMailer extends Mailer {
 		// TODO Need to test with contentLocation param
 		if (empty($disposition)) $disposition = isset($file['contentLocation']) ? 'inline' : 'attachment';
 
-		// Encryption results in ASCII armored data appropriate for email
+		// Encode for emailing. Only accepts binary|8bit|7bit not quoted-printable|base64
+		// ASCII armored output *should* be base64 though?
+		$encoding = "7bit";
+
+		// GPG encryption and signing if necessary
 		if ($this->sign) {
 			$file['contents'] = $this->gpg->encryptAndSign($file['contents']);
 		}
