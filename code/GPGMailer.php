@@ -100,12 +100,9 @@ class GPGMailer extends Mailer {
 
 		// Make the plain text part
 		$headers["Content-Type"] = "text/plain; charset=utf-8";
-		$headers["Content-Transfer-Encoding"] = $plainEncoding ? $plainEncoding : "quoted-printable";
 
-		// Is this step necessary if we get ASCII armor output?
-		$plainContent = ($plainEncoding == "base64") 
-			? chunk_split(base64_encode($plainContent), 60)
-			: $this->QuotedPrintable_encode($plainContent);
+		// Encoding forced to 7bit
+		$headers["Content-Transfer-Encoding"] = "7bit";
 
 		// GPG encryption and signing if necessary
 		if ($this->sign) {
