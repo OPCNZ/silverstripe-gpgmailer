@@ -81,7 +81,7 @@ class GPGMailer extends Mailer {
 	 * @param  String  $subject       Subject line for email
 	 * @param  String  $plainContent  Content for email
 	 * @param  Boolean $attachedFiles Indicate whether files are attached
-	 * @param  Boolean $customheaders Indicate whether custom headers are presetn
+	 * @param  Array   $customheaders Custom email headers
 	 * @return Mixed                  Array if successful or false if unsuccessful
 	 */
 	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
@@ -90,8 +90,8 @@ class GPGMailer extends Mailer {
 		$plainEncoding = false; 
 
 		if ($customheaders && is_array($customheaders) == false) {
-			echo "htmlEmail($to, $from, $subject, ...) could not send mail: improper \$customheaders passed:<BR>";
-			dieprintr($customheaders);
+			user_error("Could not send mail, improper custom headers: $customheaders", E_USER_WARNING);
+			return false;
 		}
 	
 		// If the subject line contains extended characters, we must encode it
