@@ -4,7 +4,7 @@
 	"type": "silverstripe-module",
 	"require": {
 		"silverstripe/framework": "~3.1",
-		"pear/crypt_gpg": "dev-master"
+		"pear/crypt_gpg": "dev-master#3f24905839720b2f433f241289b3d03210b2a74e"
 	},
 	"repositories": [
 		{
