@@ -9,7 +9,7 @@ require_once 'Crypt/GPG.php';
  * Necessary to provide keyring files via Crypt_GPG options in YAML.
  *
  * @todo  HTML encryption if possible, look into PGP/MIME
- * @todo  Ability tro add additional encryption and signing keys
+ * @todo  Ability to add additional encryption and signing keys
  * @todo  correct headers for Content-Transfer-Encoding, should be base64 for ASCII armor? Only accepts binary|8bit|7bit not quoted-printable|base64
  *        http://en.wikipedia.org/wiki/MIME#Content-Transfer-Encoding
  *        http://www.techopedia.com/definition/23150/ascii-armor
@@ -22,18 +22,34 @@ require_once 'Crypt/GPG.php';
  */
 class GPGMailer extends Mailer {
 
+	/**
+	 * Options for Crypt_GPG
+	 *
+	 * @see Crypt_GPGAbstract::__construct() for available options
+	 * @var array
+	 */
 	private $options = array();
 
+	/**
+	 * Instance of Crypt_GPG
+	 *
+	 * @var Crypt_GPG
+	 */
 	private $gpg;
 
+	/**
+	 * Whether to sign the email also
+	 *
+	 * @var boolean
+	 */
 	private $sign = false;
 
 	/**
 	 * Set options for Crypt_GPG and add encrypting and signing keys.
 	 * 
-	 * @param String $encryptKey        Key identifier, usually an email address but can be fingerprint
-	 * @param String $signKey           Key identifier, usually an email address but can be fingerprint
-	 * @param String $signKeyPassPhrase Optional passphrase for key required for signing
+	 * @param string $encryptKey        Key identifier, usually an email address but can be fingerprint
+	 * @param string $signKey           Key identifier, usually an email address but can be fingerprint
+	 * @param string $signKeyPassPhrase Optional passphrase for key required for signing
 	 */
 	public function __construct($encryptKey, $signKey = null, $signKeyPassPhrase = null) {
 		parent::__construct();
@@ -55,7 +71,7 @@ class GPGMailer extends Mailer {
 	/**
 	 * Set options for Crypt_GPG.
 	 *
-	 * @see  Crypt_GPGAbstract::__construct()
+	 * @see Crypt_GPGAbstract::__construct() for available options
 	 */
 	private function setOptions() {
 
@@ -76,13 +92,13 @@ class GPGMailer extends Mailer {
 	 *
 	 * @todo  conversion of BCC -> Bcc necessary in this method as well as sendHTML()?
 	 * 
-	 * @param  String  $to            To address RFC 2822 format
-	 * @param  String  $from          From address RFC 2822 format
-	 * @param  String  $subject       Subject line for email
-	 * @param  String  $plainContent  Content for email
-	 * @param  Boolean $attachedFiles Indicate whether files are attached
-	 * @param  Array   $customheaders Custom email headers
-	 * @return Mixed                  Array if successful or false if unsuccessful
+	 * @param  string  $to            To address RFC 2822 format
+	 * @param  string  $from          From address RFC 2822 format
+	 * @param  string  $subject       Subject line for email
+	 * @param  string  $plainContent  Content for email
+	 * @param  boolean $attachedFiles Indicate whether files are attached
+	 * @param  array   $customheaders Custom email headers
+	 * @return mixed                  Array if successful or false if unsuccessful
 	 */
 	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customheaders = false) {
 
@@ -178,6 +194,14 @@ class GPGMailer extends Mailer {
 	/**
 	 * Encrypting HTML emails does not work so this method triggers a warning and sends using sendPlain() and plaintext 
 	 * version of the HTML content.
+	 *
+	 * @param  string  $to            To address RFC 2822 format
+	 * @param  string  $from          From address RFC 2822 format
+	 * @param  string  $subject       Subject line for email
+	 * @param  string  $plainContent  Content for email
+	 * @param  boolean $attachedFiles Indicate whether files are attached
+	 * @param  array   $customheaders Custom email headers
+	 * @return mixed                  Array if successful or false if unsuccessful
 	 */
 	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false) {
 
@@ -199,11 +223,11 @@ class GPGMailer extends Mailer {
 	 * @todo  test with disposition set to inline
 	 * @todo  test with contentLocation param, see Mailer::encodeFileForEmail()
 	 * 
-	 * @param  Mixed   $file         Array of file data including content or just string indicating filename
-	 * @param  String  $destFileName Destination filename
-	 * @param  String  $disposition  Disposition of attachment, inline or attachment
-	 * @param  String  $extraHeaders Extra headers for attachement
-	 * @return String                Contents for attachement including headers and ASCII armored file content
+	 * @param  mixed   $file         Array of file data including content or just string indicating filename
+	 * @param  string  $destFileName Destination filename
+	 * @param  string  $disposition  Disposition of attachment, inline or attachment
+	 * @param  string  $extraHeaders Extra headers for attachement
+	 * @return string                Contents for attachement including headers and ASCII armored file content
 	 */
 	public function encodeFileForEmail($file, $destFileName = false, $disposition = NULL, $extraHeaders = "") {
 
