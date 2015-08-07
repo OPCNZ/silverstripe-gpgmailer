@@ -1,5 +1,5 @@
 {
-	"name": "frankmullenger/gpg-mailer",
+	"name": "opcnz/gpg-mailer",
 	"description": "GPG Mailer",
 	"type": "silverstripe-module",
 	"require": {
@@ -12,5 +12,12 @@
 			"url": "https://github.com/pear/Crypt_GPG.git"
 		}
 	],
-	"minimum-stability": "dev"
+	"minimum-stability": "dev",
+	"authors": [
+		{
+			"name": "Frank Mullenger",
+			"email": "frank@silverstripe.com",
+			"role": "Developer"
+		}
+	]
 }

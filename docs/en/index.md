@@ -38,7 +38,7 @@ $email = new Email(
 
 // Set up encryption mailer
 $mailer = new GPGMailer(
-	'frank@swipestripe.com',
+	'recipient@example.com',
 	'sender@example.com', 
 	'senderPa55w0rd'
 );

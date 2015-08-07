@@ -11,7 +11,7 @@ This requires the transfer of public keys between the sender and recipient, it a
 ## Install
 
 ```
-composer require frankmullenger/gpg-mailer ~1.0
+composer require opcnz/gpg-mailer ~1.0
 ```
 
 ## Documentation
