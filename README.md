@@ -7,6 +7,7 @@ This requires the transfer of public keys between the sender and recipient, it a
 ## Requirements
 -  SilverStripe Framework (silverstripe/framework ~3.1)
 -  PEAR Crypt GPG (pear/crypt_gpg 3f24905839720b2f433f241289b3d03210b2a74e)
+-  GnuPG binary
 
 ## Install
 
@@ -51,6 +52,8 @@ GPGMailer:
 
 ## Maintainers
 - Frank Mullenger <frank@silverstripe.com>
+- Ed Linklater <ed@silverstripe.com>
+- Cam Findlay <cam@silverstripe.com>
 
 ## Bugtracker
 Bugs are tracked in the issues section of this repository. Before submitting an issue please read over existing issues to ensure yours is unique. 
