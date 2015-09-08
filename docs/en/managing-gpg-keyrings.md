@@ -23,7 +23,7 @@ gpg --no-default-keyring --keyring ./pubring.gpg --import /path/HJK597C00.asc
 - [Trust the key](https://www.gnupg.org/gph/en/manual/x334.html#AEN345)
 
 ```bash
-gpg --no-default-keyring --keyring ./pubring.gpg --edit-key rebelalliance+privacy@silverstripe.com
+gpg --no-default-keyring --keyring ./pubring.gpg --edit-key recipient@example.com
 trust
 ```
 
