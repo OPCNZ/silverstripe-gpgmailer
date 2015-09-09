@@ -28,7 +28,7 @@ class GPGMailer extends Mailer {
 	 * @see Crypt_GPGAbstract::__construct() for available options
 	 * @var array
 	 */
-	private $options = array();
+	private static $options = array();
 
 	/**
 	 * Instance of Crypt_GPG
@@ -56,7 +56,7 @@ class GPGMailer extends Mailer {
 
 		// Set options
 		$this->setOptions();
-		$this->gpg = new Crypt_GPG($this->options);
+		$this->gpg = new Crypt_GPG(self::$options);
 
 		// Add encryption key
 		$this->gpg->addEncryptKey($encryptKey);	
@@ -76,14 +76,13 @@ class GPGMailer extends Mailer {
 	private function setOptions() {
 
 		$options = GPGMailer::config()->options;
-		if (isset($options[0]) && is_array($options[0])) {
-			$this->options = $options[0];
+		if (isset($options) && is_array($options)) {
+			self::$options = $options;
 		}
-
 		// Option to override home dir and provide a relative path instead
-		if (isset($this->options['relative_homedir'])) {
-			$this->options['homedir'] = Director::getAbsFile($this->options['relative_homedir']);
-			unset($this->options['relative_homedir']);
+		if (isset(self::$options['relative_homedir'])) {
+			self::$options['homedir'] = Director::getAbsFile(self::$options['relative_homedir']);
+			unset($self::$options['relative_homedir']);
 		}
 	}
 
