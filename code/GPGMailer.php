@@ -23,12 +23,33 @@ require_once 'Crypt/GPG.php';
 class GPGMailer extends Mailer {
 
 	/**
+	 * Encryption key
+	 *
+	 * @var string
+	 */
+	private static $encrypt_key;
+
+	/**
+	 * Signing key
+	 *
+	 * @var string
+	 */
+	private static $sign_key;
+
+	/**
+	 * Signing passphrase
+	 *
+	 * @var string
+	 */
+	private static $sign_passphrase;
+
+	/**
 	 * Options for Crypt_GPG
 	 *
 	 * @see Crypt_GPGAbstract::__construct() for available options
 	 * @var array
 	 */
-	private $options = array();
+	private static $options = array();
 
 	/**
 	 * Instance of Crypt_GPG
@@ -38,7 +59,7 @@ class GPGMailer extends Mailer {
 	private $gpg;
 
 	/**
-	 * Whether to sign the email also
+	 * Whether to sign the email also. Automatically enabled if {@link self::$sign_key} is provided.
 	 *
 	 * @var boolean
 	 */
@@ -49,41 +70,44 @@ class GPGMailer extends Mailer {
 	 * 
 	 * @param string $encryptKey        Key identifier, usually an email address but can be fingerprint
 	 * @param string $signKey           Key identifier, usually an email address but can be fingerprint
-	 * @param string $signKeyPassPhrase Optional passphrase for key required for signing
+	 * @param string $signPassphrase    Optional passphrase for key required for signing
 	 */
-	public function __construct($encryptKey, $signKey = null, $signKeyPassPhrase = null) {
+	public function __construct($encryptKey = null, $signKey = null, $signPassphrase = null) {
 		parent::__construct();
 
-		// Set options
-		$this->setOptions();
-		$this->gpg = new Crypt_GPG($this->options);
-
-		// Add encryption key
-		$this->gpg->addEncryptKey($encryptKey);	
-
-		// Add signing key
-		if ($signKey) {
-			$this->gpg->addSignKey($signKey, $signKeyPassPhrase);
-			$this->sign = true;
+		if(empty($encryptKey)) {
+			$encryptKey = self::config()->encrypt_key;
 		}
-	}
+		if(empty($signKey)) {
+			$signKey = self::config()->sign_key;
+		}
+		if(empty($signPassphrase)) {
+			$signPassphrase = self::config()->sign_passphrase;
+		}
 
-	/**
-	 * Set options for Crypt_GPG.
-	 *
-	 * @see Crypt_GPGAbstract::__construct() for available options
-	 */
-	private function setOptions() {
+		$options = self::config()->options;
 
-		$options = GPGMailer::config()->options;
-		if (isset($options[0]) && is_array($options[0])) {
-			$this->options = $options[0];
+		// Backwards compatibility - support a single nested array
+		if(is_array($options[0])) {
+			$options = $options[0];
 		}
 
 		// Option to override home dir and provide a relative path instead
-		if (isset($this->options['relative_homedir'])) {
-			$this->options['homedir'] = Director::getAbsFile($this->options['relative_homedir']);
-			unset($this->options['relative_homedir']);
+		if (isset($options['relative_homedir'])) {
+			$options['homedir'] = Director::getAbsFile($options['relative_homedir']);
+			unset($options['relative_homedir']);
+		}
+
+		// Set options
+		$this->gpg = new Crypt_GPG($options);
+
+		// Add encryption key
+		$this->gpg->addEncryptKey($encryptKey);
+
+		// Add signing key
+		if (!empty($signKey)) {
+			$this->gpg->addSignKey($signKey, $signPassphrase);
+			$this->sign = true;
 		}
 	}
 
@@ -123,8 +147,7 @@ class GPGMailer extends Mailer {
 		// GPG encryption and signing if necessary
 		if ($this->sign) {
 			$plainContent = $this->gpg->encryptAndSign($plainContent);
-		}
-		else {
+		} else {
 			$plainContent = $this->gpg->encrypt($plainContent);
 		}
 
@@ -147,8 +170,7 @@ class GPGMailer extends Mailer {
 			list($fullBody, $headers) = $this->encodeMultipart($messageParts, "multipart/mixed");
 
 		// Messages without attachments do not require such treatment
-		} 
-		else {
+		} else {
 			$fullBody = $plainContent;
 		}
 
