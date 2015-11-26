@@ -280,4 +280,20 @@ class GPGMailer extends Mailer {
 		return $headers . $file['contents'];
 	}
 
+	/**
+	 * Handle the renaming of the validEmailAddr method in silverstripe-framework 3.2.0.
+	 * Maintains backwards compatibility with silverstripe-framework 3.1.
+	 *
+	 * @see Mailer::validEmailAddress
+	 */
+	public function validEmailAddr($address) {
+		if(method_exists('Mailer', 'validEmailAddr')) {
+			return parent::validEmailAddr($address);
+		} elseif(method_exists('Mailer', 'validEmailAddress')) {
+			return parent::validEmailAddress($address);
+		} else {
+			throw new Exception('validEmailAddr (or validEmailAddress) method not found on Mailer');
+		}
+	}
+
 }
