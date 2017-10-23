@@ -12,17 +12,17 @@
 	"authors": [
 		{
 			"name": "Ed Linklater",
-			"email": "ed@edgar.industries",
+			"email": "ed@edgar.industries"
 		},
         {
             "name": "Frank Mullenger",
-            "email": "frank@silverstripe.com",
+            "email": "frank@silverstripe.com"
         }
 	],
 	"homepage": "https://github.com/opcnz/silverstripe-gpgmailer",
 	"support": {
 		"issues": "https://github.com/opcnz/silverstripe-gpgmailer/issues",
-		"source": "https://github.com/opcnz/silverstripe-gpgmailer/tree/master",
+		"source": "https://github.com/opcnz/silverstripe-gpgmailer/tree/master"
 	},
 	"extra": {
     	"installer-name": "gpgmailer"
