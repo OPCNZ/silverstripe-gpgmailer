@@ -6,8 +6,8 @@
 - Supply documentation that follow the [GitHub Flavored Markdown](https://help.github.com/articles/markdown-basics/) conventions
 - When having discussions about this module in issues or pull request please adhere to the [SilverStripe Community Code of Conduct](https://docs.silverstripe.org/en/contributing/code_of_conduct/)
 
-
 ## Contributor license agreement
+
 By supplying code to this module in patches, tickets and pull requests, you agree 
 to assign copyright of that code to the Office of the Privacy Commissioner (New Zealand), 
 on the condition that these code changes are released under the same BSD license 

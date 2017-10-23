@@ -3,7 +3,7 @@
 require_once 'Crypt/GPG.php';
 
 /**
- * Mailer that encrypts contents of email using GPG. Encrypting HTML is not implemented, quite difficult and requires 
+ * Mailer that encrypts contents of email using GPG. Encrypting HTML is not implemented, quite difficult and requires
  * a very simple HTML template that can be encrypted and re-wrapped in body tags.
  *
  * Necessary to provide keyring files via Crypt_GPG options in YAML.
@@ -18,7 +18,7 @@ require_once 'Crypt/GPG.php';
  *        https://www.gnupg.org/documentation/manuals/gnupg/Input-and-Output.html
  *        "Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation."
  * @todo  Content-Type header to include protocol="application/pgp-encrypted" https://tools.ietf.org/html/rfc3156
- * 
+ *
  */
 class GPGMailer extends Mailer
 {
@@ -47,12 +47,12 @@ class GPGMailer extends Mailer
 
     /**
      * Set options for Crypt_GPG and add encrypting and signing keys.
-     * 
+     *
      * @param string $encryptKey        Key identifier, usually an email address but can be fingerprint
      * @param string $signKey           Key identifier, usually an email address but can be fingerprint
-     * @param string $signKeyPassPhrase Optional passphrase for key required for signing
+     * @param string $signKeyPassphrase Optional passphrase for key required for signing
      */
-    public function __construct($encryptKey, $signKey = null, $signKeyPassPhrase = null)
+    public function __construct($encryptKey = null, $signKey = null, $signKeyPassphrase = null)
     {
         parent::__construct();
 
@@ -61,11 +61,17 @@ class GPGMailer extends Mailer
         $this->gpg = new Crypt_GPG($this->options);
 
         // Add encryption key
-        $this->gpg->addEncryptKey($encryptKey);
+        if (is_null($encryptKey) && !defined('GPGMAILER_ENCRYPT_KEY')) {
+            throw new InvalidArgumentException('$encryptKey not defined');
+        }
+        $this->gpg->addEncryptKey($encryptKey ?: GPGMAILER_ENCRYPT_KEY);
 
         // Add signing key
-        if ($signKey) {
-            $this->gpg->addSignKey($signKey, $signKeyPassPhrase);
+        if ($signKey || defined('GPGMAILER_SIGN_KEY')) {
+            if (is_null($signKeyPassphrase) && defined('GPGMAILER_SIGN_KEY_PASSPHRASE')) {
+                $signKeyPassphrase = GPGMAILER_SIGN_KEY_PASSPHRASE;
+            }
+            $this->gpg->addSignKey($signKey ?: GPGMAILER_SIGN_KEY, $signKeyPassphrase);
             $this->sign = true;
         }
     }
@@ -87,13 +93,18 @@ class GPGMailer extends Mailer
             $this->options['homedir'] = Director::getAbsFile($this->options['relative_homedir']);
             unset($this->options['relative_homedir']);
         }
+
+        // Environment variables should override Configuration system
+        if (defined('GPGMAILER_HOMEDIR')) {
+            $this->options['homedir'] = GPGMAILER_HOMEDIR;
+        }
     }
 
     /**
      * Encrypt and send plain text email, large amount of copy paste from Mailer::sendPlain().
      *
      * @todo  conversion of BCC -> Bcc necessary in this method as well as sendHTML()?
-     * 
+     *
      * @param  string  $to            To address RFC 2822 format
      * @param  string  $from          From address RFC 2822 format
      * @param  string  $subject       Subject line for email
@@ -112,7 +123,7 @@ class GPGMailer extends Mailer
             user_error("Could not send mail, improper custom headers: $customheaders", E_USER_WARNING);
             return false;
         }
-    
+
         // If the subject line contains extended characters, we must encode it
         $subject = Convert::xml2raw($subject);
         $subject = "=?UTF-8?B?" . base64_encode($subject) . "?=";
@@ -166,13 +177,13 @@ class GPGMailer extends Mailer
         } else {
             $bounceAddress = $from;
         }
-        
+
         // $headers["Sender"] 		= $from;
         $headers["X-Mailer"]    = X_MAILER;
         if (!isset($customheaders["X-Priority"])) {
             $headers["X-Priority"]    = 3;
         }
-        
+
         $headers = array_merge((array)$headers, (array)$customheaders);
 
         // the carbon copy header has to be 'Cc', not 'CC' or 'cc' -- ensure this.
@@ -193,16 +204,16 @@ class GPGMailer extends Mailer
         if (!$result = @mail($to, $subject, $fullBody, $headers, "-f$bounceAddress")) {
             $result = mail($to, $subject, $fullBody, $headers);
         }
-        
+
         if ($result) {
             return array($to,$subject,$fullBody,$headers);
         }
-            
+
         return false;
     }
 
     /**
-     * Encrypting HTML emails does not work so this method triggers a warning and sends using sendPlain() and plaintext 
+     * Encrypting HTML emails does not work so this method triggers a warning and sends using sendPlain() and plaintext
      * version of the HTML content.
      *
      * @param  string  $to            To address RFC 2822 format
@@ -233,7 +244,7 @@ class GPGMailer extends Mailer
      * @todo  test with $destFilename
      * @todo  test with disposition set to inline
      * @todo  test with contentLocation param, see Mailer::encodeFileForEmail()
-     * 
+     *
      * @param  mixed   $file         Array of file data including content or just string indicating filename
      * @param  string  $destFileName Destination filename
      * @param  string  $disposition  Disposition of attachment, inline or attachment
@@ -246,7 +257,7 @@ class GPGMailer extends Mailer
             user_error("encodeFileForEmail: not passed a filename and/or data", E_USER_WARNING);
             return;
         }
-        
+
         if (is_string($file)) {
             $file = array('filename' => $file);
             $fh = fopen($file['filename'], "rb");
@@ -289,12 +300,12 @@ class GPGMailer extends Mailer
         $headers =    "Content-type: $mimeType;\n\tname=\"$base\"\n".
             "Content-Transfer-Encoding: $encoding\n".
             "Content-Disposition: $disposition;\n\tfilename=\"$base\"\n";
-        
+
         // TODO Need to test with contentLocation param
         if (isset($file['contentLocation'])) {
             $headers .= 'Content-Location: ' . $file['contentLocation'] . "\n" ;
         }
-        
+
         $headers .= $extraHeaders . "\n";
         return $headers . $file['contents'];
     }
