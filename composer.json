@@ -5,28 +5,24 @@
 	"keywords": ["silverstripe", "cwp", "privacy", "GPG", "PGP"],
 	"license": "BSD-3-Clause",
 	"require": {
-		"silverstripe/framework": "~3.1",
-		"pear/crypt_gpg": "dev-master#3f24905839720b2f433f241289b3d03210b2a74e"
+		"silverstripe/framework": "^3.1",
+		"pear/crypt_gpg": "^1.6"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/pear/Crypt_GPG.git"
-		}
-	],
 	"minimum-stability": "dev",
 	"authors": [
 		{
-			"name": "Frank Mullenger",
-			"email": "frank@silverstripe.com",
-			"role": "Developer"
-		}
+			"name": "Ed Linklater",
+			"email": "ed@edgar.industries"
+		},
+        {
+            "name": "Frank Mullenger",
+            "email": "frank@silverstripe.com"
+        }
 	],
 	"homepage": "https://github.com/opcnz/silverstripe-gpgmailer",
 	"support": {
 		"issues": "https://github.com/opcnz/silverstripe-gpgmailer/issues",
-		"source": "https://github.com/opcnz/silverstripe-gpgmailer/tree/master",
-		"irc": "irc://irc.freenode.org/#silverstripe"
+		"source": "https://github.com/opcnz/silverstripe-gpgmailer/tree/master"
 	},
 	"extra": {
     	"installer-name": "gpgmailer"
