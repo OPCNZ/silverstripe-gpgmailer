@@ -5,7 +5,7 @@ private keys. It improves the privacy of email communications sent over standard
 of signed emails to ensure the message has been sent from a known sender.
 
 ## Requirements
- - SilverStripe Framework (silverstripe/framework 3.1+)
+ - SilverStripe Framework (silverstripe/framework ^4)
  - PEAR Crypt GPG (pear/crypt_gpg)
  - GnuPG binary installed
 
@@ -29,7 +29,7 @@ See the [developer documentation](docs/en/index.md)
 
 ## Bugtracker
 
-Bugs are tracked in the issues section of this repository. Before submitting an issue please read over existing issues to ensure yours is unique. 
+Bugs are tracked in the issues section of this repository. Before submitting an issue please read over existing issues to ensure yours is unique.
 
 If the issue does look like a new bug:
 

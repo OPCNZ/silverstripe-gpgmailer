@@ -1,5 +1,14 @@
 <?php
 
+namespace Silverstripe\GPGMailer;
+
+use Crypt_GPG;
+use InvalidArgumentException;
+use Exception;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Email\Mailer;
+
 require_once 'Crypt/GPG.php';
 
 /**
@@ -318,9 +327,9 @@ class GPGMailer extends Mailer
      */
     public function validEmailAddr($address)
     {
-        if (method_exists('Mailer', 'validEmailAddr')) {
+        if (method_exists(Mailer::class, 'validEmailAddr')) {
             return parent::validEmailAddr($address);
-        } elseif (method_exists('Mailer', 'validEmailAddress')) {
+        } elseif (method_exists(Mailer::class, 'validEmailAddress')) {
             return parent::validEmailAddress($address);
         } else {
             throw new Exception('validEmailAddr (or validEmailAddress) method not found on Mailer');

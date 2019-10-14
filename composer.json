@@ -1,7 +1,7 @@
 {
 	"name": "opcnz/silverstripe-gpgmailer",
 	"description": "The GPG Mailer module improves privacy by allowing emails being sent from SilverStripe CMS to be encrypted and/or signed using GPG public and private keys.",
-	"type": "silverstripe-module",
+	"type": "silverstripe-vendormodule",
 	"keywords": ["silverstripe", "cwp", "privacy", "GPG", "PGP"],
 	"license": "BSD-3-Clause",
 	"require": {
