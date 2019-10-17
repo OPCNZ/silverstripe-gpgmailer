@@ -29,7 +29,7 @@ require_once 'Crypt/GPG.php';
  * @todo  Content-Type header to include protocol="application/pgp-encrypted" https://tools.ietf.org/html/rfc3156
  *
  */
-class GPGMailer extends Mailer
+class GPGMailer implements Mailer
 {
 
     /**
@@ -334,5 +334,11 @@ class GPGMailer extends Mailer
         } else {
             throw new Exception('validEmailAddr (or validEmailAddress) method not found on Mailer');
         }
+    }
+
+    public function send($email)
+    {
+        /** @upgrade */
+        throw new \RuntimeException('Not implement/upgraded yet');
     }
 }
