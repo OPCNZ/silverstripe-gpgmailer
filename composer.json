@@ -1,30 +1,36 @@
 {
-	"name": "opcnz/silverstripe-gpgmailer",
-	"description": "The GPG Mailer module improves privacy by allowing emails being sent from SilverStripe CMS to be encrypted and/or signed using GPG public and private keys.",
-	"type": "silverstripe-vendormodule",
-	"keywords": ["silverstripe", "cwp", "privacy", "GPG", "PGP"],
-	"license": "BSD-3-Clause",
-	"require": {
-		"silverstripe/framework": "^4",
-		"pear/crypt_gpg": "^1.6"
-	},
-	"minimum-stability": "dev",
-	"authors": [
-		{
-			"name": "Ed Linklater",
-			"email": "ed@edgar.industries"
-		},
+    "name": "opcnz/silverstripe-gpgmailer",
+    "description": "The GPG Mailer module improves privacy by allowing emails being sent from SilverStripe CMS to be encrypted (and signed) using GPG public and private keys.",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "cwp",
+        "email",
+        "privacy",
+        "GPG",
+        "PGP",
+        "OpenPGP"
+    ],
+    "license": "BSD-3-Clause",
+    "authors": [
         {
-            "name": "Frank Mullenger",
-            "email": "frank@silverstripe.com"
+            "name": "Silverstripe Ltd.",
+            "email": "info@silverstripe.com"
         }
-	],
-	"homepage": "https://github.com/opcnz/silverstripe-gpgmailer",
-	"support": {
-		"issues": "https://github.com/opcnz/silverstripe-gpgmailer/issues",
-		"source": "https://github.com/opcnz/silverstripe-gpgmailer/tree/master"
-	},
-	"extra": {
-    	"installer-name": "gpgmailer"
-    }
+    ],
+    "homepage": "https://github.com/opcnz/silverstripe-gpgmailer",
+    "support": {
+        "issues": "https://github.com/opcnz/silverstripe-gpgmailer/issues",
+        "source": "https://github.com/opcnz/silverstripe-gpgmailer/tree/master"
+    },
+    "require": {
+        "nightjar/swiftsigner-cryptgpg": "^1",
+        "silverstripe/framework": "^4"
+    },
+    "autoload": {
+        "psr-4": {
+            "OPCNZ\\GPGMailer\\": "src"
+        }
+    },
+    "minimum-stability": "dev"
 }

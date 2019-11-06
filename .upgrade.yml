@@ -1,2 +1,2 @@
 mappings:
-  GPGMailer: Silverstripe\GPGMailer\GPGMailer
+  GPGMailer: OPCNZ\GPGMailer\GPGMailer
